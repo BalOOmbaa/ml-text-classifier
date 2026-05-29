@@ -22,6 +22,7 @@
 cd ml-text-classifier
 docker build -t ml-classifier .
 docker run -d --name ml-api -p 8000:8000 ml-classifier
+```
 
 ## Управление контейнером
 
@@ -30,6 +31,7 @@ docker start ml-api
 docker stop ml-api
 docker rm ml-api
 docker logs ml-api
+```
 
 ## Запуск Telegram-бота
 
@@ -37,6 +39,7 @@ docker logs ml-api
 set BOT_TOKEN=
 set API_URL=http://localhost:8000/predict
 python bot.py
+```
 
 ## Работа с Git
 
@@ -45,3 +48,4 @@ git status
 git add .
 git commit -m ""
 git push origin main
+```
