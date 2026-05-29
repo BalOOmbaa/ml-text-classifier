@@ -2,15 +2,23 @@ FROM python:3.10-slim
 
 WORKDIR /app
 
-# Устанавливаем системные зависимости (для некоторых моделей может понадобиться)
+# Устанавливаем минимальные системные зависимости
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+    gcc \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
+# Копируем requirements
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
 
-# Копируем весь код и папку с моделью
+# Устанавливаем CPU-версию torch
+RUN pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu
+
+# Устанавливаем остальные зависимости и чистим кэш
+RUN pip install --no-cache-dir -r requirements.txt \
+    && rm -rf /root/.cache/pip
+
+# Копируем код и модель
 COPY . .
 
 EXPOSE 8000
