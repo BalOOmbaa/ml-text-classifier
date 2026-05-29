@@ -17,6 +17,10 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Convert repository name to lowercase
+        run: |
+          echo "REPO_LOWER=$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
         with:
@@ -26,10 +30,10 @@ jobs:
 
       - name: Build Docker image
         run: |
-          IMAGE_NAME=ghcr.io/${{ github.repository }}/ml-classifier:latest
+          IMAGE_NAME=ghcr.io/${{ env.REPO_LOWER }}/ml-classifier:latest
           docker build -t $IMAGE_NAME .
 
       - name: Push Docker image
         run: |
-          IMAGE_NAME=ghcr.io/${{ github.repository }}/ml-classifier:latest
+          IMAGE_NAME=ghcr.io/${{ env.REPO_LOWER }}/ml-classifier:latest
           docker push $IMAGE_NAME
